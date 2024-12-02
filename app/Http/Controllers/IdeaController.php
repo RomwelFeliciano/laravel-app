@@ -12,7 +12,7 @@ class IdeaController extends Controller
     {
         request()->validate([
             'content' => 'required|min:3|max:240',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         $content = request()->get('content', '');
 
