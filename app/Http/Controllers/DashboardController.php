@@ -9,8 +9,6 @@ class DashboardController extends Controller
 {
     public function index()
     {
-
-
         // $idea = new Idea([
         //     'content'=> 'Hello epeople',
         //     'image'=> 'test.png'
@@ -21,5 +19,10 @@ class DashboardController extends Controller
         return view('dashboard', [
             'ideas' => Idea::orderBy('created_at', 'DESC')->paginate(5),
         ]);
+    }
+
+    public function show(Idea $idea)
+    {
+        return view('ideas.show', compact('idea'));
     }
 }

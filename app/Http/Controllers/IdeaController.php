@@ -31,10 +31,18 @@ class IdeaController extends Controller
         return redirect()->route('dashboard')->with('success', 'Idea was created successfully!');
     }
 
-    public function destroy(Idea $id)
+    public function destroy(Idea $idea)
     {
-        $id->delete();
+        if ($idea->image) {
+            $imagePath = public_path('images/' . $idea->image);
 
-        return redirect()->route('dashboard')->with('success', 'Deleted Idea');
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+        }
+
+        $idea->delete();
+
+        return redirect()->route('dashboard')->with('success', 'Idea was deleted successfully!');
     }
 }
