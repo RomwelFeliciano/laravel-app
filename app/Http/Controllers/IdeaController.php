@@ -11,15 +11,21 @@ class IdeaController extends Controller
     public function store()
     {
         request()->validate([
-            'idea' => 'required|min:3|max:240',
+            'content' => 'required|min:3|max:240',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
         ]);
-        $content = request()->get('idea', '');
+        $content = request()->get('content', '');
+
+        $imageName = time() . '.' . request()->image->getClientOriginalExtension();
+
+        request()->image->move(public_path('images'), $imageName);
 
         Idea::create([
             'content' => $content,
+            'image' => $imageName,
         ]);
 
-        return redirect()->route(route: 'dashboard')->with('success', 'Idea was created successfully!');
+        return redirect()->route('dashboard')->with('success', 'Idea was created successfully!');
     }
 
     public function destroy(Idea $id)
