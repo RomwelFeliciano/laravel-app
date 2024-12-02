@@ -12,13 +12,16 @@ class IdeaController extends Controller
     {
         request()->validate([
             'content' => 'required|min:3|max:240',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
         ]);
         $content = request()->get('content', '');
 
-        $imageName = time() . '.' . request()->image->getClientOriginalExtension();
+        $imageName = '';
 
-        request()->image->move(public_path('images'), $imageName);
+        if (request()->hasFile('image')) {
+            $imageName = time() . '.' . request()->image->getClientOriginalExtension();
+            request()->image->move(public_path('images'), $imageName);
+        }
 
         Idea::create([
             'content' => $content,

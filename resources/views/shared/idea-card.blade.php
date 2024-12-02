@@ -12,6 +12,11 @@
         </div>
     </div>
     <div class="card-body">
+        @if ($idea->image)
+            <div class="mb-4">
+                <img src="{{ URL::to('/images') }}/{{ $idea->image }}" alt="" class="img-fluid">
+            </div>
+        @endif
         <p class="fs-6 fw-light text-muted">
             {{ $idea->content }}
         </p>
