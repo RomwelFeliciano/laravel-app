@@ -13,7 +13,8 @@
                 <form action="{{ route('ideas.destroy', $idea->id) }}" method="post">
                     @csrf
                     @method('delete')
-                    <a href="{{route('ideas.show', $idea->id)}}">View</a>
+                    <a href="{{ route('ideas.edit', $idea->id) }}" class="mx-2">Edit</a>
+                    <a href="{{ route('ideas.show', $idea->id) }}">View</a>
                     <button class="btn ms-2 btn-danger btn-sm">&times;</button>
                 </form>
             </div>
@@ -25,9 +26,31 @@
                 <img src="{{ URL::to('/images') }}/{{ $idea->image }}" alt="" class="img-fluid">
             </div>
         @endif
-        <p class="fs-6 fw-light text-muted">
-            {{ $idea->content }}
-        </p>
+        {{-- Editing Mode --}}
+        @if ($editing ?? false)
+            <form action="{{ route('ideas.update', $idea->id) }}" method="post" enctype="multipart/form-data">
+                @csrf
+                @method('put')
+                <div class="mb-3">
+                    <textarea class="form-control" id="content" name="content" rows="3">{{ $idea->content }}</textarea>
+                    @error('content')
+                        <span class="fs-6 text-danger mt-2 d-block">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="mb-3">
+                    <input type="file" name="image" id="image" class="form-control" accept="image/*">
+                    @error('image')
+                        <span class="fs-6 text-danger mt-2 d-block">{{ $message }}</span>
+                    @enderror
+                </div>
+                <button type="submit" class="btn btn-dark mb-2 btn-sm"> Update </button>
+            </form>
+        @else
+            <p class="fs-6 fw-light text-muted">
+                {{ $idea->content }}
+            </p>
+        @endif
+        <hr>
         <div class="d-flex justify-content-between">
             <div>
                 <a href="#" class="fw-light nav-link fs-6"> <span class="fas fa-heart me-1">
