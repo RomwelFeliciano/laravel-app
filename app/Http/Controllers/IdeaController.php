@@ -24,7 +24,7 @@ class IdeaController extends Controller
 
     public function destroy(Idea $id)
     {
-       $id->delete();
+        $id->delete();
 
         return redirect()->route('dashboard')->with('success', 'Deleted Idea');
     }

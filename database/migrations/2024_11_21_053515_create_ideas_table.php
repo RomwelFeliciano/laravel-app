@@ -18,7 +18,8 @@ return new class extends Migration
         Schema::create('ideas', function (Blueprint $table) {
             $table->id();
             $table->string('content');
-            $table->integer('likes')->default(0);
+            $table->string('image');
+            $table->unsignedInteger('likes')->default(0);
             $table->timestamps(); //created_at and updated_at
         });
     }

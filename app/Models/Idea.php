@@ -9,8 +9,5 @@ class Idea extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'content',
-        'likes',
-    ];
+    protected $fillable = ['content', 'image', 'likes'];
 }

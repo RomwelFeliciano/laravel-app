@@ -11,7 +11,12 @@ class DashboardController extends Controller
     {
 
 
-        // dump(Idea::all());
+        // $idea = new Idea([
+        //     'content'=> 'Hello epeople',
+        //     'image'=> 'test.png'
+        // ]);
+
+        // $idea->save();
 
         return view('dashboard', [
             'ideas' => Idea::orderBy('created_at', 'DESC')->paginate(5),
