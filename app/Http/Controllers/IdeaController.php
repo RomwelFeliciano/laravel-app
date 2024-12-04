@@ -7,30 +7,23 @@ use Illuminate\Http\Request;
 
 class IdeaController extends Controller
 {
-    //
     public function show(Idea $idea)
     {
         return view('ideas.show', compact('idea'));
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        request()->validate([
-            'content' => 'required|min:3|max:240',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-
-        $content = request()->get('content', '');
+        $validated = $request->validate($this->rules());
 
         $imageName = '';
 
-        if (request()->hasFile('image')) {
-            $imageName = time() . '.' . request()->image->getClientOriginalExtension();
-            request()->image->move(public_path('images'), $imageName);
+        if($request->file('image')){
+            $imageName = $this->handleImageUpload($request);
         }
 
         Idea::create([
-            'content' => $content,
+            'content' => $validated['content'],
             'image' => $imageName,
         ]);
 
@@ -39,18 +32,16 @@ class IdeaController extends Controller
 
     public function destroy(Idea $idea)
     {
-        if ($idea->image) {
-            $imagePath = public_path('images/' . $idea->image);
-            if (file_exists($imagePath)) {
-                unlink($imagePath);
-            }
-        }
+        $this->deleteImage($idea->image);
 
         $idea->delete();
 
         return redirect()->route('dashboard')->with('success', 'Idea was deleted successfully!');
     }
 
+    /**
+     * Show the edit form for an idea.
+     */
     public function edit(Idea $idea)
     {
         $editing = true;
@@ -58,33 +49,49 @@ class IdeaController extends Controller
         return view('ideas.show', compact('idea', 'editing'));
     }
 
-    public function update(Idea $idea)
+    public function update(Request $request, Idea $idea)
     {
-        request()->validate([
-            'content' => 'required|min:3|max:240',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
+        $validated = $request->validate($this->rules());
 
-        $imageName = $idea->image;
-
-        if (request()->hasFile('image')) {
-            if ($idea->image) {
-                $imagePath = public_path('images/' . $idea->image);
-                if (file_exists($imagePath)) {
-                    unlink($imagePath);
-                }
-            }
-            $imageName = time() . '.' . request()->image->getClientOriginalExtension();
-            request()->image->move(public_path('images'), $imageName);
+        if ($request->hasFile('image')) {
+            $this->deleteImage($idea->image);
+            $idea->image = $this->handleImageUpload($request);
         }
 
-        $idea->content = request()->get('content', '');
-        $idea->image = $imageName;
-
+        $idea->content = $validated['content'];
         $idea->save();
 
-        return redirect()
-            ->route('ideas.show', $idea->id)
+        return redirect()->route('ideas.show', $idea->id)
             ->with('success', 'Idea was updated successfully!');
+    }
+
+    private function rules(): array
+    {
+        return [
+            'content' => 'required|min:3|max:240',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ];
+    }
+
+    private function handleImageUpload(Request $request): ?string
+    {
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->image->getClientOriginalExtension();
+            $request->image->move(public_path('images'), $imageName);
+
+            return $imageName;
+        }
+
+        return null;
+    }
+
+    private function deleteImage(?string $imageName): void
+    {
+        if ($imageName) {
+            $imagePath = public_path('images/' . $imageName);
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+        }
     }
 }
