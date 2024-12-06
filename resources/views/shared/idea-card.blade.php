@@ -16,8 +16,10 @@
                     @method('delete')
                     <a href="{{ route('ideas.show', $idea->id) }}">View</a>
                     @auth
-                        <a href="{{ route('ideas.edit', $idea->id) }}" class="mx-2">Edit</a>
-                        <button class="btn ms-2 btn-danger btn-sm">&times;</button>
+                        @if (auth()->id() === $idea->user_id)
+                            <a href="{{ route('ideas.edit', $idea->id) }}" class="mx-2">Edit</a>
+                            <button class="btn ms-2 btn-danger btn-sm">&times;</button>
+                        @endif
                     @endauth
                 </form>
             </div>
