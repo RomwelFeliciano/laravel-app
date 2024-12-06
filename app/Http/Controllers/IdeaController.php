@@ -16,6 +16,8 @@ class IdeaController extends Controller
     {
         $validated = $request->validate($this->rules());
 
+        $validated['user_id'] = auth()->id();
+
         $imageName = '';
 
         if ($request->file('image')) {
@@ -24,6 +26,7 @@ class IdeaController extends Controller
 
         Idea::create([
             'content' => $validated['content'],
+            'user_id' => $validated['user_id'],
             'image' => $imageName,
         ]);
 
@@ -32,6 +35,10 @@ class IdeaController extends Controller
 
     public function destroy(Idea $idea)
     {
+        if (auth()->id() !== $idea->user_id) {
+            abort(404, 'Error Page');
+        }
+
         $this->deleteImage($idea->image);
 
         $idea->delete();
@@ -41,6 +48,10 @@ class IdeaController extends Controller
 
     public function edit(Idea $idea)
     {
+        if (auth()->id() !== $idea->user_id) {
+            abort(404, 'Error Page');
+        }
+
         $editing = true;
 
         return view('ideas.show', compact('idea', 'editing'));
@@ -48,6 +59,10 @@ class IdeaController extends Controller
 
     public function update(Request $request, Idea $idea)
     {
+        if (auth()->id() !== $idea->user_id) {
+            abort(404, 'Error Page');
+        }
+
         $validated = $request->validate($this->rules());
 
         if ($request->hasFile('image')) {

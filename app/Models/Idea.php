@@ -9,10 +9,15 @@ class Idea extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['content', 'image', 'likes'];
+    protected $fillable = ['user_id', 'content', 'image', 'likes'];
 
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
