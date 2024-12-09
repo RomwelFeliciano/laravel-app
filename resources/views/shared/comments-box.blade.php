@@ -1,4 +1,4 @@
-<div>
+<div class="mt-2">
     <form action="{{ route('ideas.commentstore', $idea->id) }}" method="post">
         @csrf
         <div class="mb-3">

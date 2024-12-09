@@ -26,11 +26,6 @@
         </div>
     </div>
     <div class="card-body">
-        @if ($idea->image)
-            <div class="mb-4">
-                <img src="{{ URL::to('/images') }}/{{ $idea->image }}" alt="" class="img-fluid">
-            </div>
-        @endif
         {{-- Editing Mode --}}
         @if ($editing ?? false)
             <form action="{{ route('ideas.update', $idea->id) }}" method="post" enctype="multipart/form-data">
@@ -54,6 +49,11 @@
             <p class="fs-6 fw-light text-muted">
                 {{ $idea->content }}
             </p>
+        @endif
+        @if ($idea->image)
+            <div class="mb-4">
+                <img src="{{ URL::to('/images') }}/{{ $idea->image }}" alt="" class="img-fluid">
+            </div>
         @endif
         <hr>
         <div class="d-flex justify-content-between">

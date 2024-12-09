@@ -3,6 +3,7 @@
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\IdeaController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,4 +29,10 @@ Route::group(['prefix' => 'ideas', 'as' => 'ideas.'], function () {
         Route::delete('/{idea}', [IdeaController::class, 'destroy'])->name('destroy');
         Route::post('/{idea}/comments', [CommentController::class, 'store'])->name('commentstore');
     });
+});
+
+Route::group(['prefix' => 'users', 'as' => 'users.', 'middleware' => ['auth']], function () {
+    Route::get('/{user}', [UserController::class, 'show'])->name('show');
+    Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
+    Route::put('/{user}', [UserController::class, 'update'])->name('update');
 });

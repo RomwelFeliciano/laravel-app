@@ -17,21 +17,14 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $fillable = ['name', 'email', 'password'];
 
     /**
      * The attributes that should be hidden for serialization.
      *
      * @var array<int, string>
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden = ['password', 'remember_token'];
 
     /**
      * The attributes that should be cast.
@@ -43,7 +36,13 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function ideas(){
-        return $this->hasMany(Idea::class);
+    public function ideas()
+    {
+        return $this->hasMany(Idea::class)->latest();
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class)->latest();
     }
 }
