@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Idea;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class IdeaController extends Controller
 {
@@ -18,17 +19,14 @@ class IdeaController extends Controller
 
         $validated['user_id'] = auth()->id();
 
-        $imageName = '';
+        $validated['image'] = '';
 
-        if ($request->file('image')) {
-            $imageName = $this->handleImageUpload($request);
+        if ($request->has('image')) {
+            $imagePath = $request->file('image')->store('ideas', 'public');
+            $validated['image'] = $imagePath;
         }
 
-        Idea::create([
-            'content' => $validated['content'],
-            'user_id' => $validated['user_id'],
-            'image' => $imageName,
-        ]);
+        Idea::create($validated);
 
         return redirect()->route('dashboard')->with('success', 'Idea was created successfully!');
     }
@@ -39,7 +37,9 @@ class IdeaController extends Controller
             abort(404, 'Error Page');
         }
 
-        $this->deleteImage($idea->image);
+        if ($idea->image) {
+            Storage::disk('public')->delete($idea->image);
+        }
 
         $idea->delete();
 
@@ -65,12 +65,14 @@ class IdeaController extends Controller
 
         $validated = $request->validate($this->rules());
 
-        if ($request->hasFile('image')) {
-            $this->deleteImage($idea->image);
-            $idea->update(['image' => $this->handleImageUpload($request)]);
+        if ($request->has('image')) {
+            $imagePath = $request->file('image')->store('ideas', 'public');
+            $validated['image'] = $imagePath;
+
+            Storage::disk('public')->delete($idea->image);
         }
 
-        $idea->update(['content' => $validated['content']]);
+        $idea->update($validated);
 
         return redirect()
             ->route('ideas.show', $idea->id)
@@ -81,30 +83,7 @@ class IdeaController extends Controller
     {
         return [
             'content' => 'required|min:3|max:240',
+            'image' => 'nullable|image|max:2048',
         ];
-    }
-
-    private function handleImageUpload(Request $request): ?string
-    {
-        $validated = $request->validate(['image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048']);
-
-        if ($request->hasFile('image')) {
-            $imageName = time() . '.' . $validated['image']->getClientOriginalExtension();
-            $validated['image']->move(public_path('images'), $imageName);
-
-            return $imageName;
-        }
-
-        return null;
-    }
-
-    private function deleteImage(?string $imageName): void
-    {
-        if ($imageName) {
-            $imagePath = public_path('images/' . $imageName);
-            if (file_exists($imagePath)) {
-                unlink($imagePath);
-            }
-        }
     }
 }

@@ -12,7 +12,7 @@
             </div>
             <div>
                 <form action="{{ route('ideas.destroy', $idea->id) }}" method="post">
-                    @csrfp
+                    @csrf
                     @method('delete')
                     <a href="{{ route('ideas.show', $idea->id) }}">View</a>
                     @auth
@@ -52,7 +52,7 @@
         @endif
         @if ($idea->image)
             <div class="mb-4">
-                <img src="{{ URL::to('/images') }}/{{ $idea->image }}" alt="" class="img-fluid">
+                <img src="{{ $idea->getImageUrl() }}" alt="" class="img-fluid">
             </div>
         @endif
         <hr>

@@ -20,4 +20,13 @@ class Idea extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getImageUrl()
+    {
+        if ($this->image) {
+            return url('storage/' . $this->image);
+        }
+
+        return null;
+    }
 }
