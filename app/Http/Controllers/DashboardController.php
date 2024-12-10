@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\WelcomeEmail;
 use App\Models\Idea;
 use Illuminate\Http\Request;
 
@@ -15,6 +16,9 @@ class DashboardController extends Controller
         // ]);
 
         // $idea->save();
+
+        // For Testing the View of Email
+        // return new WelcomeEmail(auth()->user());
 
         $ideas = Idea::orderBy('created_at', 'DESC');
 
