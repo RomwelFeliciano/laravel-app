@@ -40,4 +40,8 @@ Route::group(['prefix' => 'users', 'as' => 'users.', 'middleware' => ['auth']], 
     Route::post('/{user}/unfollow', [FollowerController::class, 'unfollow'])->name('unfollow');
 });
 
-Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+Route::get('/profile', [UserController::class, 'profile'])
+    ->name('profile')
+    ->middleware('auth');
+
+Route::get('/terms', [DashboardController::class, 'terms'])->name('terms');
