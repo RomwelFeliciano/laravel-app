@@ -7,7 +7,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav align-items-center">
                 @guest
                     <li class="nav-item">
                         <a class="nav-link {{ Route::is('login') ? 'active' : '' }}" aria-current="page"
@@ -23,12 +23,12 @@
                         <a class="nav-link {{ Route::is('profile') ? 'active' : '' }}"
                             href="{{ route('profile') }}">{{ Auth::user()->name }}</a>
                     </li>
-                    <for class="nav-item">
+                    <li class="nav-item">
                         <form action="{{ route('logout') }}" method="post">
                             @csrf
                             <button type="submit" class="btn btn-danger btn-sm">Logout</button>
                         </form>
-                    </for>
+                    </li>
                 @endauth
             </ul>
         </div>

@@ -4,6 +4,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FollowerController;
 use App\Http\Controllers\IdeaController;
+use App\Http\Controllers\IdeaLikeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,7 +29,11 @@ Route::group(['prefix' => 'ideas', 'as' => 'ideas.'], function () {
         Route::get('/{idea}/edit', [IdeaController::class, 'edit'])->name('edit');
         Route::put('/{idea}', [IdeaController::class, 'update'])->name('update');
         Route::delete('/{idea}', [IdeaController::class, 'destroy'])->name('destroy');
+
         Route::post('/{idea}/comments', [CommentController::class, 'store'])->name('commentstore');
+
+        Route::post('/{idea}/like', [IdeaLikeController::class, 'like'])->name('like');
+        Route::post('/{idea}/unlike', [IdeaLikeController::class, 'unlike'])->name('unlike');
     });
 });
 
@@ -36,6 +41,7 @@ Route::group(['prefix' => 'users', 'as' => 'users.', 'middleware' => ['auth']], 
     Route::get('/{user}', [UserController::class, 'show'])->name('show');
     Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
     Route::put('/{user}', [UserController::class, 'update'])->name('update');
+
     Route::post('/{user}/follow', [FollowerController::class, 'follow'])->name('follow');
     Route::post('/{user}/unfollow', [FollowerController::class, 'unfollow'])->name('unfollow');
 });
