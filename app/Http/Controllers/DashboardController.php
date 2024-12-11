@@ -10,16 +10,11 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // $idea = new Idea([
-        //     'content'=> 'Hello epeople',
-        //     'image'=> 'test.png'
-        // ]);
-
-        // $idea->save();
-
         // For Testing the View of Email
         // return new WelcomeEmail(auth()->user());
 
+        // Inline Eager Loading in the controller but much better to do it inside the model
+        // $ideas = Idea::with('user', 'comments.user')->orderBy('created_at', 'DESC');
         $ideas = Idea::orderBy('created_at', 'DESC');
 
         if (request()->has('search')) {
