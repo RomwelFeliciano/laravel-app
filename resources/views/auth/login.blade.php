@@ -8,7 +8,7 @@
                 <h3 class="text-center text-dark">Login</h3>
                 <div class="form-group mt-3">
                     <label for="email" class="text-dark">Email:</label><br>
-                    <input type="email" name="email" id="email" class="form-control">
+                    <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}">
                     @error('email')
                         <span class="fs-6 text-danger mt-2 d-block">{{ $message }}</span>
                     @enderror

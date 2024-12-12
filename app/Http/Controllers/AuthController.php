@@ -46,8 +46,6 @@ class AuthController extends Controller
             'password' => 'required|min:8',
         ]);
 
-        // dd($validated);
-
         if (auth()->attempt($validated)) {
             $request->session()->regenerate();
 
