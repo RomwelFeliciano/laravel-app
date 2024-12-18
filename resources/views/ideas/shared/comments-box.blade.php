@@ -3,6 +3,9 @@
         @csrf
         <div class="mb-3">
             <textarea class="fs-6 form-control" name="content" rows="1"></textarea>
+            @error('content')
+            <span class="fs-6 text-danger mt-2 d-block">{{ $message }}</span>
+        @enderror
         </div>
         <div>
             <button type="submit" class="btn btn-primary btn-sm"> Post Comment </button>

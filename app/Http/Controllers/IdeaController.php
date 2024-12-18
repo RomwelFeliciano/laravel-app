@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateIdeaRequest;
 use App\Models\Idea;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -13,9 +14,9 @@ class IdeaController extends Controller
         return view('ideas.show', compact('idea'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, CreateIdeaRequest $ideaRequest)
     {
-        $validated = $request->validate($this->rules());
+        $validated = $ideaRequest->validated();
 
         $validated['user_id'] = auth()->id();
 
@@ -53,14 +54,14 @@ class IdeaController extends Controller
         return view('ideas.show', compact('idea', 'editing'));
     }
 
-    public function update(Request $request, Idea $idea)
+    public function update(Request $request, Idea $idea, CreateIdeaRequest $ideaRequest)
     {
         $this->authorize('update', $idea);
 
-        $validated = $request->validate($this->rules());
+        $validated = $ideaRequest->validated();
 
-        if ($request->has('image')) {
-            $imagePath = $request->file('image')->store('ideas', 'public');
+        if ($ideaRequest->has('image')) {
+            $imagePath = $ideaRequest->file('image')->store('ideas', 'public');
             $validated['image'] = $imagePath;
 
             Storage::disk('public')->delete($idea->image);
@@ -71,13 +72,5 @@ class IdeaController extends Controller
         return redirect()
             ->route('ideas.show', $idea->id)
             ->with('success', 'Idea was updated successfully!');
-    }
-
-    private function rules(): array
-    {
-        return [
-            'content' => 'required|min:3|max:240',
-            'image' => 'nullable|image|max:2048',
-        ];
     }
 }
