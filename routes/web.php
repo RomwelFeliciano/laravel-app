@@ -61,5 +61,5 @@ Route::get('/feed', FeedController::class)
 
 // ADMIN
 Route::get('/admin', [AdminDashboardController::class, 'index'])
-    ->middleware(['auth', 'admin'])
+    ->middleware(['auth', 'can:admin'])
     ->name('admin.dashboard');

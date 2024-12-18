@@ -10,18 +10,18 @@
                         </a></h5>
                 </div>
             </div>
-            <div>
-                <form action="{{ route('ideas.destroy', $idea->id) }}" method="post">
-                    @csrf
-                    @method('delete')
-                    <a href="{{ route('ideas.show', $idea->id) }}">View</a>
-                    @auth
-                        @if (auth()->id() === $idea->user_id)
-                            <a href="{{ route('ideas.edit', $idea->id) }}" class="mx-2">Edit</a>
+            <div class="d-flex align-items-center">
+                <a href="{{ route('ideas.show', $idea->id) }}">View</a>
+                @auth
+                    @can('idea.edit', $idea)
+                        <a href="{{ route('ideas.edit', $idea->id) }}" class="mx-2">Edit</a>
+                        <form action="{{ route('ideas.destroy', $idea->id) }}" method="post">
+                            @csrf
+                            @method('delete')
                             <button class="btn ms-2 btn-danger btn-sm">&times;</button>
-                        @endif
-                    @endauth
-                </form>
+                        </form>
+                    @endcan
+                @endauth
             </div>
         </div>
     </div>

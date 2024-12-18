@@ -33,9 +33,7 @@ class IdeaController extends Controller
 
     public function destroy(Idea $idea)
     {
-        if (auth()->id() !== $idea->user_id) {
-            abort(404, 'Error Page');
-        }
+        $this->authorize('idea.delete', $idea);
 
         if ($idea->image) {
             Storage::disk('public')->delete($idea->image);
@@ -48,9 +46,7 @@ class IdeaController extends Controller
 
     public function edit(Idea $idea)
     {
-        if (auth()->id() !== $idea->user_id) {
-            abort(404, 'Error Page');
-        }
+        $this->authorize('idea.edit', $idea);
 
         $editing = true;
 
@@ -59,9 +55,7 @@ class IdeaController extends Controller
 
     public function update(Request $request, Idea $idea)
     {
-        if (auth()->id() !== $idea->user_id) {
-            abort(404, 'Error Page');
-        }
+        $this->authorize('idea.edit', $idea);
 
         $validated = $request->validate($this->rules());
 
