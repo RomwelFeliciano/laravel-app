@@ -33,7 +33,7 @@ class IdeaController extends Controller
 
     public function destroy(Idea $idea)
     {
-        $this->authorize('idea.delete', $idea);
+        $this->authorize('delete', $idea);
 
         if ($idea->image) {
             Storage::disk('public')->delete($idea->image);
@@ -46,7 +46,7 @@ class IdeaController extends Controller
 
     public function edit(Idea $idea)
     {
-        $this->authorize('idea.edit', $idea);
+        $this->authorize('update', $idea);
 
         $editing = true;
 
@@ -55,7 +55,7 @@ class IdeaController extends Controller
 
     public function update(Request $request, Idea $idea)
     {
-        $this->authorize('idea.edit', $idea);
+        $this->authorize('update', $idea);
 
         $validated = $request->validate($this->rules());
 
